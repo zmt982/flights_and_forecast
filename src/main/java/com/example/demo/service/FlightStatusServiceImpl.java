@@ -17,9 +17,9 @@ public class FlightStatusServiceImpl implements FlightStatusService {
         Map<String, List<WeatherForecast>> forecast = flightStatus.getForecast();
         flightStatus.getFlights().forEach(flight -> {
             if (isFlightWeather(flight, forecast)) {
-                System.out.printf("%s | %s -> %s | as scheduled%n", flight.getNo(), flight.getFrom(), flight.getTo());
+                System.out.printf("%s | %s -> %s | по расписанию%n", flight.getNo(), flight.getFrom(), flight.getTo());
             } else {
-                System.out.printf("%s | %s -> %s | cancelled%n", flight.getNo(), flight.getFrom(),
+                System.out.printf("%s | %s -> %s | отменен%n", flight.getNo(), flight.getFrom(),
                         flight.getTo());
             }
         });
@@ -29,8 +29,8 @@ public class FlightStatusServiceImpl implements FlightStatusService {
         List<WeatherForecast> weatherListFrom = forecast.get(String.valueOf(flight.getFrom()));
         List<WeatherForecast> weatherListTo = forecast.get(String.valueOf(flight.getTo()));
         WeatherForecast weatherFrom = weatherListFrom.get(flight.getDeparture());
-        WeatherForecast weatherTo = weatherListTo.get(flight.getDeparture() + UTC_MAP.get(flight.getFrom())
-                + flight.getDuration() - UTC_MAP.get(flight.getTo()));
+        WeatherForecast weatherTo = weatherListTo.get(flight.getDeparture() - UTC_MAP.get(flight.getFrom())
+                + flight.getDuration() + UTC_MAP.get(flight.getTo()));
         boolean flightWeatherFrom = weatherFrom.getWind() < 30 && weatherFrom.getVisibility() >= 200;
         boolean flightWeatherTo = weatherTo.getWind() < 30 && weatherTo.getVisibility() >= 200;
         if (flightWeatherFrom && flightWeatherTo) {
